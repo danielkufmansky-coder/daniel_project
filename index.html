@@ -1,0 +1,196 @@
+
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>הנדסאי בניין IL — מרכז הלימוד הלאומי</title>
+<link rel="stylesheet" href="css/main.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏗️</text></svg>">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" id="navbar">
+  <div class="nav-inner">
+    <a class='nav-logo' href='/'>
+      <span class="logo-icon">🏗️</span>
+      <span>
+        <span class="logo-text">הנדסאי בניין IL</span>
+        <span class="logo-sub">מרכז הלימוד הלאומי</span>
+      </span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a class='nav-link active' href='/'>ראשי</a>
+      <a class='nav-link' href='/subjects'>מקצועות</a>
+      <a class='nav-link' href='/formulas'>נוסחאות</a>
+      <a class='nav-link' href='/exams'>מבחנים</a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-ghost" onclick="openModal('loginModal')">התחברות</button>
+      <button class="btn-primary" onclick="openModal('registerModal')">הרשמה חינם</button>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()" id="hamburger">☰</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="container hero-content">
+    <div class="hero-badge">🎓 לסטודנטים להנדסאי בניין בישראל</div>
+    <h1>כל חומרי הלימוד<br><span class="accent">במקום אחד</span></h1>
+    <p class="hero-sub">מצגות, סיכומים, תרגילים, נוסחאות ומבחנים לכל 13 מקצועות הנדסאי הבניין — מסודר, מהיר ונגיש מכל מכשיר.</p>
+    <div class="hero-search">
+      <input type="text" id="heroSearch" placeholder="חפש נוסחה, נושא, קובץ..." onkeydown="if(event.key==='Enter')doSearch()">
+      <button onclick="doSearch()">🔍 חיפוש</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-n">2,840+</span><span class="stat-l">קבצי לימוד</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat"><span class="stat-n">13</span><span class="stat-l">מקצועות</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat"><span class="stat-n">412</span><span class="stat-l">נוסחאות חכמות</span></div>
+      <div class="stat-sep"></div>
+      <div class="stat"><span class="stat-n">1,200+</span><span class="stat-l">סטודנטים</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SUBJECTS GRID -->
+<section class="section bg-gray">
+  <div class="container">
+    <div class="section-header">
+      <h2>בחר מקצוע</h2>
+      <p>13 מקצועות מסודרים עם כל חומרי הלימוד</p>
+    </div>
+    <div class="subjects-grid" id="subjectsGrid"></div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2>מה יש בפלטפורמה?</h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📚</div>
+        <h3>חומרי לימוד מלאים</h3>
+        <p>מצגות, סיכומי שיעור, חומרי עזר, סרטוני הסבר וקישורים לכל מקצוע</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📐</div>
+        <h3>מאגר נוסחאות חכם</h3>
+        <p>לכל נוסחה — הסבר, פירוט משתנים, דוגמה פתורה ושגיאות נפוצות</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎓</div>
+        <h3>מבחנים משנים קודמות</h3>
+        <p>מאגר מבחנים עם פתרונות — מבחני אמצע, גמר וכל שנים</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⬆️</div>
+        <h3>שתף חומרים</h3>
+        <p>העלה קבצים ועזור לקהילה — דרג, הגב ושמור למועדפים</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🛠️</div>
+        <h3>כלים מקצועיים</h3>
+        <p>קבצי Excel, מחשבונים הנדסיים, טבלאות תקנים וכלים שימושיים</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">❓</div>
+        <h3>קהילת סטודנטים</h3>
+        <p>שאל שאלות, קבל תשובות, השתתף בדיונים עם סטודנטים אחרים</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <h2>מוכן להצטרף?</h2>
+    <p>הרשמה חינמית, ללא כרטיס אשראי — רק מספר טלפון</p>
+    <button class="btn-primary btn-large" onclick="openModal('registerModal')">הרשמה חינם עכשיו →</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-logo">🏗️ הנדסאי בניין IL</div>
+    <div class="footer-links">
+      <a href="#">אודות</a>
+      <a href="#">צור קשר</a>
+      <a href="#">מדיניות פרטיות</a>
+    </div>
+    <div class="footer-copy">© 2025 הנדסאי בניין IL</div>
+  </div>
+</footer>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="loginModal" onclick="closeModalOutside(event,'loginModal')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+    <h2 class="modal-title">התחברות</h2>
+    <p class="modal-sub">הזן את מספר הטלפון שלך</p>
+    <div class="form-group">
+      <label>מספר טלפון</label>
+      <input type="tel" id="loginPhone" placeholder="05X-XXXXXXX" class="input-field">
+    </div>
+    <button class="btn-primary btn-full" onclick="sendOTP('login')">שלח קוד אימות</button>
+    <div id="otpSection_login" class="otp-section" style="display:none">
+      <div class="form-group" style="margin-top:16px">
+        <label>קוד אימות (4 ספרות)</label>
+        <input type="text" id="loginOTP" placeholder="XXXX" maxlength="4" class="input-field input-otp">
+      </div>
+      <button class="btn-primary btn-full" onclick="verifyOTP('login')">כניסה</button>
+    </div>
+    <p class="modal-switch">אין לך חשבון? <a href="#" onclick="switchModal('loginModal','registerModal')">הרשמה חינם</a></p>
+  </div>
+</div>
+
+<div class="modal-overlay" id="registerModal" onclick="closeModalOutside(event,'registerModal')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
+    <h2 class="modal-title">הרשמה חינם</h2>
+    <p class="modal-sub">הצטרף לקהילת הנדסאי הבניין</p>
+    <div class="form-row">
+      <div class="form-group">
+        <label>שם פרטי</label>
+        <input type="text" id="regFirst" placeholder="שם פרטי" class="input-field">
+      </div>
+      <div class="form-group">
+        <label>שם משפחה</label>
+        <input type="text" id="regLast" placeholder="שם משפחה" class="input-field">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>מספר טלפון</label>
+      <input type="tel" id="regPhone" placeholder="05X-XXXXXXX" class="input-field">
+    </div>
+    <button class="btn-primary btn-full" onclick="sendOTP('register')">שלח קוד אימות</button>
+    <div id="otpSection_register" class="otp-section" style="display:none">
+      <div class="form-group" style="margin-top:16px">
+        <label>קוד אימות (4 ספרות)</label>
+        <input type="text" id="registerOTP" placeholder="XXXX" maxlength="4" class="input-field input-otp">
+      </div>
+      <button class="btn-primary btn-full" onclick="verifyOTP('register')">צור חשבון</button>
+    </div>
+    <p class="modal-switch">יש לך חשבון? <a href="#" onclick="switchModal('registerModal','loginModal')">התחברות</a></p>
+  </div>
+</div>
+
+<div class="modal-overlay" id="toast-container"></div>
+
+<script src="js/subjects.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script>
+  renderSubjectsGrid(document.getElementById('subjectsGrid'), 'index');
+</script>
+</body>
+</html>
