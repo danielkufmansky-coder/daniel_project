@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מאגר נוסחאות חכם — הנדסאי בניין IL</title>
+<link rel="stylesheet" href="css/main.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏗️</text></svg>">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-icon">🏗️</span><span><span class="logo-text">הנדסאי בניין IL</span><span class="logo-sub">מרכז הלימוד הלאומי</span></span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html" class="nav-link">ראשי</a>
+      <a href="subjects.html" class="nav-link">מקצועות</a>
+      <a href="formulas.html" class="nav-link active">נוסחאות</a>
+      <a href="exams.html" class="nav-link">מבחנים</a>
+    </div>
+    <div class="nav-actions" id="navActions">
+      <button class="btn-ghost" onclick="openModal('loginModal')">התחברות</button>
+      <button class="btn-primary" onclick="openModal('registerModal')">הרשמה חינם</button>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()" id="hamburger">☰</button>
+  </div>
+</nav>
+
+<div style="background:linear-gradient(135deg,#0d3355,#1a4f7a);padding:30px 20px;color:white">
+  <div class="container">
+    <h1 style="font-size:28px;font-weight:800;margin-bottom:8px">📐 מאגר נוסחאות חכם</h1>
+    <p style="opacity:0.8;margin-bottom:18px">לכל נוסחה — הסבר, משתנים, דוגמה פתורה ושגיאות נפוצות</p>
+    <div class="hero-search" style="max-width:460px">
+      <input type="text" id="formulaSearch" placeholder="חפש נוסחה..." oninput="filterFormulas()">
+      <button onclick="filterFormulas()">🔍</button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="formulas-layout">
+
+    <!-- FILTERS -->
+    <div class="formula-filters">
+      <div class="filter-title">מקצוע</div>
+      <div id="subjectFilters">
+        <div class="filter-chip active" data-subject="all" onclick="filterBySubject(this,'all')">הכל</div>
+      </div>
+    </div>
+
+    <!-- FORMULAS LIST -->
+    <div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin:24px 0 16px">
+        <div style="font-size:14px;color:var(--text-muted)" id="formulaCount"></div>
+        <button class="btn-outline btn-sm" onclick="showAddFormulaInfo()">+ הוסף נוסחה</button>
+      </div>
+      <div id="formulasList"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="loginModal" onclick="closeModalOutside(event,'loginModal')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+    <h2 class="modal-title">התחברות</h2>
+    <p class="modal-sub">הזן את מספר הטלפון שלך</p>
+    <div class="form-group"><label>מספר טלפון</label><input type="tel" id="loginPhone" class="input-field" placeholder="05X-XXXXXXX"></div>
+    <button class="btn-primary btn-full" onclick="sendOTP('login')">שלח קוד אימות</button>
+    <div id="otpSection_login" class="otp-section" style="display:none">
+      <div class="form-group" style="margin-top:16px"><label>קוד אימות</label><input type="text" id="loginOTP" maxlength="4" class="input-field input-otp" placeholder="XXXX"></div>
+      <button class="btn-primary btn-full" onclick="verifyOTP('login')">כניסה</button>
+    </div>
+    <p class="modal-switch">אין לך חשבון? <a href="#" onclick="switchModal('loginModal','registerModal')">הרשמה</a></p>
+  </div>
+</div>
+<div class="modal-overlay" id="registerModal" onclick="closeModalOutside(event,'registerModal')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
+    <h2 class="modal-title">הרשמה חינם</h2>
+    <div class="form-row">
+      <div class="form-group"><label>שם פרטי</label><input type="text" id="regFirst" class="input-field"></div>
+      <div class="form-group"><label>שם משפחה</label><input type="text" id="regLast" class="input-field"></div>
+    </div>
+    <div class="form-group"><label>מספר טלפון</label><input type="tel" id="regPhone" class="input-field" placeholder="05X-XXXXXXX"></div>
+    <button class="btn-primary btn-full" onclick="sendOTP('register')">שלח קוד אימות</button>
+    <div id="otpSection_register" class="otp-section" style="display:none">
+      <div class="form-group" style="margin-top:16px"><label>קוד אימות</label><input type="text" id="registerOTP" maxlength="4" class="input-field input-otp" placeholder="XXXX"></div>
+      <button class="btn-primary btn-full" onclick="verifyOTP('register')">צור חשבון</button>
+    </div>
+  </div>
+</div>
+
+<footer class="footer" style="margin-top:60px">
+  <div class="container footer-inner">
+    <div class="footer-logo">🏗️ הנדסאי בניין IL</div>
+    <div class="footer-links"><a href="#">אודות</a><a href="#">צור קשר</a></div>
+    <div class="footer-copy">© 2025</div>
+  </div>
+</footer>
+
+<script src="js/subjects.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script>
+const FORMULAS = [
+  {
+    id:'f1', subject:'statics', subjectName:'חישוב סטטי', name:'מומנט כפיפה',
+    expr:'M = F × d',
+    what:'מחשב את מומנט הכפיפה הנגרם מכוח חיצוני סביב נקודה.',
+    vars:[ {sym:'M', unit:'kN·m', desc:'מומנט הכפיפה'}, {sym:'F', unit:'kN', desc:'הכוח המופעל'}, {sym:'d', unit:'m', desc:'מרחק מנקודת הציר'} ],
+    example:'קורה עם כוח F = 10kN במרחק d = 3m מנקודה A.\nM = 10 × 3 = 30 kN·m',
+    warning:'שכחה להמיר יחידות — אם d בס"מ, חלק ב-100 לפני חישוב.',
+    tags:['כפיפה','מומנט']
+  },
+  {
+    id:'f2', subject:'statics', subjectName:'חישוב סטטי', name:'מאמץ נורמלי',
+    expr:'σ = N / A',
+    what:'מחשב את המאמץ הנורמלי בחתך תחת כוח אקסיאלי.',
+    vars:[ {sym:'σ', unit:'MPa', desc:'מאמץ נורמלי'}, {sym:'N', unit:'N', desc:'כוח אקסיאלי'}, {sym:'A', unit:'mm²', desc:'שטח חתך'} ],
+    example:'עמוד A = 200mm², N = 50,000N\nσ = 50000/200 = 250 MPa',
+    warning:'ערבוב יחידות — N ב-kN ו-A ב-cm² ייתן תוצאה שגויה.',
+    tags:['מאמץ','חתך']
+  },
+  {
+    id:'f3', subject:'statics', subjectName:'חישוב סטטי', name:'מאמץ גזירה',
+    expr:'τ = V × Q / (I × b)',
+    what:'מחשב את מאמץ הגזירה בחתך קורה.',
+    vars:[ {sym:'τ', unit:'MPa', desc:'מאמץ גזירה'}, {sym:'V', unit:'kN', desc:'כוח גזירה'}, {sym:'Q', unit:'mm³', desc:'מומנט סטטי של חלק החתך'}, {sym:'I', unit:'mm⁴', desc:'מומנט אינרציה'}, {sym:'b', unit:'mm', desc:'רוחב החתך בנקודה'} ],
+    example:'לחתך מלבני: Q_max = b·h²/8, τ_max = 1.5·V/A',
+    warning:'הגזירה המרבית בחתך מלבני היא בציר הניטרלי, לא בקצה.',
+    tags:['גזירה','קורה']
+  },
+  {
+    id:'f4', subject:'statics', subjectName:'חישוב סטטי', name:'נוסחת אוילר — עמוד דחוס',
+    expr:'Pcr = π²·E·I / (K·L)²',
+    what:'עומס קריטי לאובדן יציבות (כיפוף) של עמוד דחוס.',
+    vars:[ {sym:'Pcr', unit:'kN', desc:'עומס קריטי'}, {sym:'E', unit:'GPa', desc:'מודול יאנג'}, {sym:'I', unit:'mm⁴', desc:'מומנט אינרציה'}, {sym:'K', unit:'—', desc:'מקדם אורך אפקטיבי'}, {sym:'L', unit:'m', desc:'אורך העמוד'} ],
+    example:'עמוד פלדה L=4m, E=200GPa, I=8000cm⁴, K=1 (פין-פין)\nPcr = π²×200,000×8×10⁷/(1×4000)² ≈ 9,870 kN',
+    warning:'K תלוי בתנאי הגבול — K=1 פין-פין, K=0.5 קבוע-קבוע, K=2 קבוע-חופשי.',
+    tags:['יציבות','עמוד','אוילר']
+  },
+  {
+    id:'f5', subject:'soil', subjectName:'קרקע וביסוס', name:'לחץ קרקע אנכי',
+    expr:'σv = γ × z',
+    what:'לחץ קרקע אנכי כולל בעומק z.',
+    vars:[ {sym:'σv', unit:'kPa', desc:'לחץ קרקע אנכי'}, {sym:'γ', unit:'kN/m³', desc:'משקל סגולי קרקע'}, {sym:'z', unit:'m', desc:'עומק מפני הקרקע'} ],
+    example:'קרקע γ=18kN/m³, z=4m\nσv = 18×4 = 72 kPa',
+    warning:'מתחת לפני המים יש להפחית לחץ מים: σ\'v = σv - u',
+    tags:['קרקע','לחץ','עומק']
+  },
+  {
+    id:'f6', subject:'soil', subjectName:'קרקע וביסוס', name:'נוסחת Terzaghi — נושאות ביסוס',
+    expr:'qu = c·Nc + q·Nq + 0.5·γ·B·Nγ',
+    what:'קיבולת נושאות של ביסוס רדוד על קרקע.',
+    vars:[ {sym:'c', unit:'kPa', desc:'הידבקות קרקע'}, {sym:'Nc,Nq,Nγ', unit:'—', desc:'מקדמי נושאות (טבלה)'}, {sym:'q', unit:'kPa', desc:'לחץ עומס עקיף'}, {sym:'γ', unit:'kN/m³', desc:'משקל סגולי'}, {sym:'B', unit:'m', desc:'רוחב הבסיס'} ],
+    example:'c=20kPa, φ=25°, B=2m, Df=1m, γ=18kN/m³\nNc=20.7, Nq=10.7, Nγ=10.9\nqu = 20×20.7 + 18×10.7 + 0.5×18×2×10.9 ≈ 795 kPa',
+    warning:'חלק ב-3 לקבלת qallow. אין להזניח את מקדמי הצורה לבסיסים מלבניים.',
+    tags:['ביסוס','נושאות','Terzaghi']
+  },
+  {
+    id:'f7', subject:'geodesy', subjectName:'גיאודזיה', name:'נוסחת גאוס — שטח מצולע',
+    expr:'A = ½|Σ(Xᵢ(Yᵢ₊₁ − Yᵢ₋₁))|',
+    what:'חישוב שטח מצולע ממן נקודות מדידה.',
+    vars:[ {sym:'A', unit:'m²', desc:'שטח המצולע'}, {sym:'X,Y', unit:'m', desc:'קואורדינטות הנקודות'}, {sym:'i', unit:'—', desc:'מספר נקודה'} ],
+    example:'מלבן 4×3m (נקודות: 0,0 → 4,0 → 4,3 → 0,3)\nA = ½|0·(0-3)+4·(3-0)+4·(0-0)+0·(0-3)| = ½|0+12+0+0| = 6 ≠ 12\n(לבדיקה: A=4×3=12 — בצע עם נקודות תקינות)',
+    warning:'סדר הנקודות חייב להיות עקבי (עם/נגד כיוון השעון). נקודה אחת הפוכה — שגיאה גדולה.',
+    tags:['שטח','גאוס','נקודות']
+  },
+  {
+    id:'f8', subject:'geodesy', subjectName:'גיאודזיה', name:'זווית אזימות',
+    expr:'α = arctan(ΔY / ΔX)',
+    what:'חישוב כיוון (אזימות) בין שתי נקודות.',
+    vars:[ {sym:'α', unit:'grad/°', desc:'אזימות'}, {sym:'ΔY', unit:'m', desc:'הפרש קואורדינטות Y'}, {sym:'ΔX', unit:'m', desc:'הפרש קואורדינטות X'} ],
+    example:'ΔY=100m, ΔX=100m → α=arctan(1)=45°=50 grad (רבע ראשון)',
+    warning:'חובה לבדוק רבע (quadrant) — arctan נותן ערכים ב-(-90,+90) בלבד.',
+    tags:['זווית','כיוון','אזימות']
+  },
+  {
+    id:'f9', subject:'math', subjectName:'מתמטיקה', name:'נוסחת שורשים ריבועיים',
+    expr:'x = (-b ± √(b²-4ac)) / 2a',
+    what:'פתרון משוואה ריבועית ax² + bx + c = 0.',
+    vars:[ {sym:'a', unit:'—', desc:'מקדם x²'}, {sym:'b', unit:'—', desc:'מקדם x'}, {sym:'c', unit:'—', desc:'קבוע'}, {sym:'Δ', unit:'—', desc:'דיסקרימיננט = b²-4ac'} ],
+    example:'x²-5x+6=0: a=1,b=-5,c=6\nΔ=25-24=1, x=(5±1)/2 → x=3 או x=2',
+    warning:'אם Δ<0 — אין פתרון ממשי. אם Δ=0 — פתרון יחיד.',
+    tags:['ריבועית','שורשים','אלגברה']
+  },
+  {
+    id:'f10', subject:'materials', subjectName:'חומרי בניין', name:'מודול יאנג (E)',
+    expr:'E = σ / ε',
+    what:'מודול האלסטיות — יחס מאמץ-עיבור באזור האלסטי.',
+    vars:[ {sym:'E', unit:'GPa', desc:'מודול יאנג'}, {sym:'σ', unit:'MPa', desc:'מאמץ'}, {sym:'ε', unit:'—', desc:'עיבור יחסי (dimensionless)'} ],
+    example:'פלדה: E=200GPa. בטון: E≈28GPa. עץ: E≈10GPa',
+    warning:'E תקף רק באזור האלסטי הלינארי — מתחת לגבול הזחיחה.',
+    tags:['מודול','אלסטיות','חומרים']
+  }
+];
+
+let activeSubjectFilter = 'all';
+
+// Build subject filter chips
+const filtersEl = document.getElementById('subjectFilters');
+const usedSubjects = [...new Set(FORMULAS.map(f => f.subject))];
+usedSubjects.forEach(sid => {
+  const s = SUBJECTS.find(x => x.id === sid);
+  if (!s) return;
+  const chip = document.createElement('div');
+  chip.className = 'filter-chip';
+  chip.dataset.subject = sid;
+  chip.textContent = s.icon + ' ' + s.name.substring(0, 18);
+  chip.onclick = function() { filterBySubject(this, sid); };
+  filtersEl.appendChild(chip);
+});
+
+function filterBySubject(el, sid) {
+  activeSubjectFilter = sid;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderFormulas();
+}
+
+function filterFormulas() { renderFormulas(); }
+
+function renderFormulas() {
+  const q = document.getElementById('formulaSearch')?.value?.toLowerCase() || '';
+  let list = FORMULAS.filter(f => {
+    const subMatch = activeSubjectFilter === 'all' || f.subject === activeSubjectFilter;
+    const qMatch = !q || f.name.toLowerCase().includes(q) || f.expr.toLowerCase().includes(q) || f.tags.some(t => t.includes(q));
+    return subMatch && qMatch;
+  });
+  document.getElementById('formulaCount').textContent = `מציג ${list.length} נוסחאות`;
+  document.getElementById('formulasList').innerHTML = list.map(f => `
+    <div class="formula-card-big" id="fc-${f.id}" onclick="toggleFormula('${f.id}')">
+      <div class="formula-card-header">
+        <div class="formula-card-left">
+          <span class="formula-subject-badge">${f.subjectName}</span>
+          <div>
+            <div class="formula-title">${f.name}</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:2px">${f.what}</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px">
+          <div class="formula-expr-preview">${f.expr}</div>
+          <div class="formula-expand-icon">▼</div>
+        </div>
+      </div>
+      <div class="formula-detail">
+        <div class="formula-expr-big">${f.expr}</div>
+        <p style="font-size:14px;margin-bottom:16px;color:var(--text-muted)">${f.what}</p>
+        <h4 style="font-size:13px;font-weight:700;margin-bottom:10px">📌 פירוט משתנים</h4>
+        <table class="vars-table">
+          <tr><th>סימון</th><th>יחידה</th><th>תיאור</th></tr>
+          ${f.vars.map(v => `<tr><td>${v.sym}</td><td style="color:var(--text-muted);font-size:12px">${v.unit}</td><td>${v.desc}</td></tr>`).join('')}
+        </table>
+        <div class="formula-example"><strong>💡 דוגמה פתורה:</strong><br>${f.example.replace(/\n/g,'<br>')}</div>
+        <div class="formula-warning"><span class="warn-label">⚠️ שגיאה נפוצה: </span>${f.warning}</div>
+        <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+          ${f.tags.map(t => `<span style="background:#f0f2f5;padding:4px 10px;border-radius:6px;font-size:12px">#${t}</span>`).join('')}
+        </div>
+      </div>
+    </div>
+  `).join('') || '<div class="empty-state"><div class="empty-state-icon">🔍</div><h3>לא נמצאו נוסחאות</h3><p>נסה מילות חיפוש אחרות</p></div>';
+}
+
+function toggleFormula(id) {
+  const el = document.getElementById('fc-' + id);
+  const wasOpen = el.classList.contains('open');
+  document.querySelectorAll('.formula-card-big').forEach(c => c.classList.remove('open'));
+  if (!wasOpen) el.classList.add('open');
+}
+
+function showAddFormulaInfo() {
+  if (!currentUser) { openModal('loginModal'); showToast('התחבר כדי להוסיף נוסחאות', 'error'); return; }
+  showToast('פונקציית הוספת נוסחאות תהיה זמינה בקרוב ✨', 'success');
+}
+
+renderFormulas();
+</script>
+</body>
+</html>

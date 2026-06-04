@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>חיפוש — הנדסאי בניין IL</title>
+<link rel="stylesheet" href="css/main.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏗️</text></svg>">
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-icon">🏗️</span><span><span class="logo-text">הנדסאי בניין IL</span><span class="logo-sub">מרכז הלימוד הלאומי</span></span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html" class="nav-link">ראשי</a>
+      <a href="subjects.html" class="nav-link">מקצועות</a>
+      <a href="formulas.html" class="nav-link">נוסחאות</a>
+      <a href="exams.html" class="nav-link">מבחנים</a>
+    </div>
+    <div class="nav-actions" id="navActions">
+      <button class="btn-ghost" onclick="openModal('loginModal')">התחברות</button>
+      <button class="btn-primary" onclick="openModal('registerModal')">הרשמה חינם</button>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()" id="hamburger">☰</button>
+  </div>
+</nav>
+
+<div class="container search-page">
+  <div style="margin-bottom:24px">
+    <div class="hero-search" style="max-width:500px;background:white;border:1.5px solid var(--border);border-radius:12px;box-shadow:var(--shadow-sm)">
+      <input type="text" id="searchInput" placeholder="חפש..." style="color:var(--text)">
+      <button onclick="doSearch()" style="background:var(--primary);color:white">🔍</button>
+    </div>
+  </div>
+  <div id="searchMeta" style="font-size:14px;color:var(--text-muted);margin-bottom:20px"></div>
+  <div id="searchResults"></div>
+</div>
+
+<div class="modal-overlay" id="loginModal" onclick="closeModalOutside(event,'loginModal')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+    <h2 class="modal-title">התחברות</h2>
+    <div class="form-group"><label>מספר טלפון</label><input type="tel" id="loginPhone" class="input-field" placeholder="05X-XXXXXXX"></div>
+    <button class="btn-primary btn-full" onclick="sendOTP('login')">שלח קוד אימות</button>
+    <div id="otpSection_login" class="otp-section" style="display:none">
+      <div class="form-group" style="margin-top:16px"><label>קוד אימות</label><input type="text" id="loginOTP" maxlength="4" class="input-field input-otp" placeholder="XXXX"></div>
+      <button class="btn-primary btn-full" onclick="verifyOTP('login')">כניסה</button>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" id="registerModal" onclick="closeModalOutside(event,'registerModal')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
+    <h2 class="modal-title">הרשמה חינם</h2>
+    <div class="form-row">
+      <div class="form-group"><label>שם פרטי</label><input type="text" id="regFirst" class="input-field"></div>
+      <div class="form-group"><label>שם משפחה</label><input type="text" id="regLast" class="input-field"></div>
+    </div>
+    <div class="form-group"><label>מספר טלפון</label><input type="tel" id="regPhone" class="input-field" placeholder="05X-XXXXXXX"></div>
+    <button class="btn-primary btn-full" onclick="sendOTP('register')">שלח קוד אימות</button>
+    <div id="otpSection_register" class="otp-section" style="display:none">
+      <div class="form-group" style="margin-top:16px"><label>קוד אימות</label><input type="text" id="registerOTP" maxlength="4" class="input-field input-otp" placeholder="XXXX"></div>
+      <button class="btn-primary btn-full" onclick="verifyOTP('register')">צור חשבון</button>
+    </div>
+  </div>
+</div>
+
+<footer class="footer" style="margin-top:40px">
+  <div class="container footer-inner">
+    <div class="footer-logo">🏗️ הנדסאי בניין IL</div>
+    <div class="footer-copy">© 2025</div>
+  </div>
+</footer>
+
+<script src="js/subjects.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const q = params.get('q') || '';
+document.getElementById('searchInput').value = q;
+document.title = `חיפוש: ${q} — הנדסאי בניין IL`;
+
+function doSearch() {
+  const val = document.getElementById('searchInput').value.trim();
+  if (val) window.location.href = 'search.html?q=' + encodeURIComponent(val);
+}
+document.getElementById('searchInput').addEventListener('keydown', e => { if(e.key==='Enter') doSearch(); });
+
+function highlight(text, q) {
+  if (!q) return text;
+  const re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi');
+  return text.replace(re, '<mark class="highlight">$1</mark>');
+}
+
+function runSearch(query) {
+  if (!query) {
+    document.getElementById('searchResults').innerHTML = `<div class="empty-state"><div class="empty-state-icon">🔍</div><h3>הזן מונח חיפוש</h3></div>`;
+    return;
+  }
+  const ql = query.toLowerCase();
+  const allFiles = getMockFiles('all', 'all');
+  const fileResults = allFiles.filter(f => f.name.toLowerCase().includes(ql));
+  const subjectResults = SUBJECTS.filter(s => s.name.toLowerCase().includes(ql) || s.desc.toLowerCase().includes(ql));
+  const total = fileResults.length + subjectResults.length;
+  document.getElementById('searchMeta').textContent = `נמצאו ${total} תוצאות עבור "${query}"`;
+
+  let html = '';
+  if (subjectResults.length) {
+    html += `<h3 style="font-size:15px;font-weight:700;margin-bottom:12px">📚 מקצועות</h3>`;
+    html += subjectResults.map(s => `
+      <a href="subject.html?id=${s.id}" class="search-result-card" style="display:block;text-decoration:none;color:inherit">
+        <div class="result-breadcrumb">מקצוע</div>
+        <div class="result-title">${s.icon} ${highlight(s.name, query)}</div>
+        <div class="result-snippet">${highlight(s.desc, query)} · ${s.files} קבצים</div>
+      </a>
+    `).join('');
+    html += '<div style="height:24px"></div>';
+  }
+  if (fileResults.length) {
+    html += `<h3 style="font-size:15px;font-weight:700;margin-bottom:12px">📄 קבצים</h3>`;
+    const favs = getFavs();
+    html += fileResults.map(f => renderFileCard({...f, name: f.name.replace(new RegExp('('+query+')', 'gi'), '$1')}, favs)).join('');
+  }
+  if (!total) {
+    html = `<div class="empty-state"><div class="empty-state-icon">🔍</div><h3>לא נמצאו תוצאות</h3><p>נסה מילות חיפוש אחרות</p></div>`;
+  }
+  document.getElementById('searchResults').innerHTML = html;
+}
+
+runSearch(q);
+</script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מקצוע — הנדסאי בניין IL</title>
+<link rel="stylesheet" href="css/main.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏗️</text></svg>">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="logo-icon">🏗️</span>
+      <span><span class="logo-text">הנדסאי בניין IL</span><span class="logo-sub">מרכז הלימוד הלאומי</span></span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html" class="nav-link">ראשי</a>
+      <a href="subjects.html" class="nav-link active">מקצועות</a>
+      <a href="formulas.html" class="nav-link">נוסחאות</a>
+      <a href="exams.html" class="nav-link">מבחנים</a>
+    </div>
+    <div class="nav-actions" id="navActions">
+      <button class="btn-ghost" onclick="openModal('loginModal')">התחברות</button>
+      <button class="btn-primary" onclick="openModal('registerModal')">הרשמה חינם</button>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()" id="hamburger">☰</button>
+  </div>
+</nav>
+
+<div id="subjectHero" class="subject-hero">
+  <!-- filled by JS -->
+</div>
+
+<div class="container">
+  <div class="subject-layout">
+
+    <!-- SIDEBAR -->
+    <div class="subject-sidebar">
+      <div class="folder-list" id="folderList"></div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content-area">
+      <div class="content-toolbar">
+        <div class="content-toolbar-left">
+          <input type="text" class="search-input" id="fileSearch" placeholder="🔍 חפש קובץ..." oninput="filterFiles()">
+          <select class="filter-select" id="sortSelect" onchange="filterFiles()">
+            <option value="date">מיון: חדש ביותר</option>
+            <option value="downloads">מיון: הכי מורד</option>
+            <option value="rating">מיון: דירוג</option>
+            <option value="name">מיון: שם</option>
+          </select>
+        </div>
+        <button class="btn-primary" onclick="openModal('uploadModal')">⬆️ העלה קובץ</button>
+      </div>
+
+      <div class="tabs" id="subfolderTabs">
+        <!-- filled by JS -->
+      </div>
+
+      <div id="filesContainer" class="files-grid">
+        <div class="loading-spinner"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODALS (login/register/upload injected by app.js) -->
+<div class="modal-overlay" id="loginModal" onclick="closeModalOutside(event,'loginModal')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+    <h2 class="modal-title">התחברות</h2>
+    <p class="modal-sub">הזן את מספר הטלפון שלך</p>
+    <div class="form-group">
+      <label>מספר טלפון</label>
+      <input type="tel" id="loginPhone" placeholder="05X-XXXXXXX" class="input-field">
+    </div>
+    <button class="btn-primary btn-full" onclick="sendOTP('login')">שלח קוד אימות</button>
+    <div id="otpSection_login" class="otp-section" style="display:none">
+      <div class="form-group" style="margin-top:16px">
+        <label>קוד אימות</label>
+        <input type="text" id="loginOTP" placeholder="XXXX" maxlength="4" class="input-field input-otp">
+      </div>
+      <button class="btn-primary btn-full" onclick="verifyOTP('login')">כניסה</button>
+    </div>
+    <p class="modal-switch">אין לך חשבון? <a href="#" onclick="switchModal('loginModal','registerModal')">הרשמה</a></p>
+  </div>
+</div>
+
+<div class="modal-overlay" id="registerModal" onclick="closeModalOutside(event,'registerModal')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
+    <h2 class="modal-title">הרשמה חינם</h2>
+    <div class="form-row">
+      <div class="form-group"><label>שם פרטי</label><input type="text" id="regFirst" class="input-field" placeholder="שם פרטי"></div>
+      <div class="form-group"><label>שם משפחה</label><input type="text" id="regLast" class="input-field" placeholder="שם משפחה"></div>
+    </div>
+    <div class="form-group"><label>מספר טלפון</label><input type="tel" id="regPhone" class="input-field" placeholder="05X-XXXXXXX"></div>
+    <button class="btn-primary btn-full" onclick="sendOTP('register')">שלח קוד אימות</button>
+    <div id="otpSection_register" class="otp-section" style="display:none">
+      <div class="form-group" style="margin-top:16px">
+        <label>קוד אימות</label>
+        <input type="text" id="registerOTP" placeholder="XXXX" maxlength="4" class="input-field input-otp">
+      </div>
+      <button class="btn-primary btn-full" onclick="verifyOTP('register')">צור חשבון</button>
+    </div>
+    <p class="modal-switch">יש לך חשבון? <a href="#" onclick="switchModal('registerModal','loginModal')">התחברות</a></p>
+  </div>
+</div>
+
+<footer class="footer" style="margin-top:60px">
+  <div class="container footer-inner">
+    <div class="footer-logo">🏗️ הנדסאי בניין IL</div>
+    <div class="footer-links"><a href="#">אודות</a><a href="#">צור קשר</a></div>
+    <div class="footer-copy">© 2025</div>
+  </div>
+</footer>
+
+<script src="js/subjects.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const subjectId = params.get('id') || 'statics';
+const subject = getSubject(subjectId);
+let activeFolder = 'all';
+let activeSub = 'all';
+
+// Hero
+document.getElementById('subjectHero').innerHTML = `
+  <div class="container">
+    <div style="font-size:13px;opacity:0.6;margin-bottom:8px">
+      <a href="index.html" style="color:rgba(255,255,255,0.7)">ראשי</a> ›
+      <a href="subjects.html" style="color:rgba(255,255,255,0.7)">מקצועות</a> ›
+      ${subject.name}
+    </div>
+    <div class="subject-hero-inner">
+      <div class="subject-hero-icon">${subject.icon}</div>
+      <div>
+        <h1>${subject.name}</h1>
+        <p>${subject.desc}</p>
+        <div class="subject-hero-stats">
+          <div class="subject-hero-stat"><strong>${subject.files}</strong> קבצים</div>
+          <div class="subject-hero-stat"><strong>7</strong> תיקיות</div>
+          <div class="subject-hero-stat"><strong>4.7 ★</strong> דירוג ממוצע</div>
+        </div>
+      </div>
+    </div>
+  </div>
+`;
+document.title = subject.name + ' — הנדסאי בניין IL';
+
+// Folder list
+const folderList = document.getElementById('folderList');
+folderList.innerHTML = `<div class="folder-list-title">תיקיות</div>
+  <div class="folder-item ${activeFolder==='all'?'active':''}" onclick="selectFolder('all')">
+    <span class="folder-item-icon">📂</span><span>כל הקבצים</span>
+    <span class="folder-item-count">${subject.files}</span>
+  </div>
+` + FOLDERS.map(f => `
+  <div class="folder-item" id="fi-${f.id}" onclick="selectFolder('${f.id}')">
+    <span class="folder-item-icon">${f.icon}</span><span>${f.name}</span>
+    <span class="folder-item-count">${getMockFiles(subjectId, f.id).length}</span>
+  </div>
+`).join('');
+
+function selectFolder(fid) {
+  activeFolder = fid;
+  activeSub = 'all';
+  document.querySelectorAll('.folder-item').forEach(el => el.classList.remove('active'));
+  document.getElementById(fid === 'all' ? null : 'fi-'+fid)?.classList.add('active');
+  if (fid === 'all') document.querySelector('.folder-item').classList.add('active');
+  renderSubFolderTabs();
+  renderFiles();
+}
+
+function renderSubFolderTabs() {
+  const tabsEl = document.getElementById('subfolderTabs');
+  if (activeFolder === 'all') { tabsEl.innerHTML = ''; return; }
+  const folder = FOLDERS.find(f => f.id === activeFolder);
+  if (!folder) { tabsEl.innerHTML = ''; return; }
+  tabsEl.innerHTML = `<button class="tab-btn ${activeSub==='all'?'active':''}" onclick="selectSub('all')">הכל</button>` +
+    folder.sub.map(s => `<button class="tab-btn ${activeSub===s?'active':''}" onclick="selectSub('${s}')">${s}</button>`).join('');
+}
+
+function selectSub(s) {
+  activeSub = s;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderFiles();
+}
+
+function renderFiles() {
+  const container = document.getElementById('filesContainer');
+  let files = getMockFiles(subjectId, activeFolder === 'all' ? 'all' : activeFolder);
+  const q = document.getElementById('fileSearch')?.value?.toLowerCase() || '';
+  if (q) files = files.filter(f => f.name.toLowerCase().includes(q));
+  const sort = document.getElementById('sortSelect')?.value || 'date';
+  files = [...files].sort((a,b) => sort==='downloads' ? b.downloads-a.downloads : sort==='rating' ? b.rating-a.rating : sort==='name' ? a.name.localeCompare(b.name,'he') : 0);
+  if (!files.length) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📭</div><h3>אין קבצים כאן עדיין</h3><p>היה הראשון להעלות חומר לימוד!</p><br><button class="btn-primary" onclick="openModal('uploadModal')">⬆️ העלה קובץ</button></div>`;
+    return;
+  }
+  const favs = getFavs();
+  container.innerHTML = files.map(f => renderFileCard(f, favs)).join('');
+}
+
+function filterFiles() { renderFiles(); }
+
+renderSubFolderTabs();
+renderFiles();
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>כל המקצועות — הנדסאי בניין IL</title>
+<link rel="stylesheet" href="css/main.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏗️</text></svg>">
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-icon">🏗️</span><span><span class="logo-text">הנדסאי בניין IL</span><span class="logo-sub">מרכז הלימוד הלאומי</span></span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html" class="nav-link">ראשי</a>
+      <a href="subjects.html" class="nav-link active">מקצועות</a>
+      <a href="formulas.html" class="nav-link">נוסחאות</a>
+      <a href="exams.html" class="nav-link">מבחנים</a>
+    </div>
+    <div class="nav-actions" id="navActions">
+      <button class="btn-ghost" onclick="openModal('loginModal')">התחברות</button>
+      <button class="btn-primary" onclick="openModal('registerModal')">הרשמה חינם</button>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()" id="hamburger">☰</button>
+  </div>
+</nav>
+
+<div style="background:linear-gradient(135deg,#0d3355,#1a4f7a);padding:30px 20px;color:white">
+  <div class="container">
+    <h1 style="font-size:28px;font-weight:800;margin-bottom:6px">📚 כל המקצועות</h1>
+    <p style="opacity:0.8">13 מקצועות — בחר מקצוע לחומרי לימוד</p>
+  </div>
+</div>
+
+<div class="container section">
+  <div style="margin-bottom:20px">
+    <input type="text" class="search-input" style="width:100%;max-width:400px" placeholder="🔍 חפש מקצוע..." oninput="filterSubjects(this.value)">
+  </div>
+  <div class="subjects-grid" id="subjectsGrid"></div>
+</div>
+
+<div class="modal-overlay" id="loginModal" onclick="closeModalOutside(event,'loginModal')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+    <h2 class="modal-title">התחברות</h2>
+    <div class="form-group"><label>מספר טלפון</label><input type="tel" id="loginPhone" class="input-field" placeholder="05X-XXXXXXX"></div>
+    <button class="btn-primary btn-full" onclick="sendOTP('login')">שלח קוד אימות</button>
+    <div id="otpSection_login" class="otp-section" style="display:none">
+      <div class="form-group" style="margin-top:16px"><label>קוד אימות</label><input type="text" id="loginOTP" maxlength="4" class="input-field input-otp" placeholder="XXXX"></div>
+      <button class="btn-primary btn-full" onclick="verifyOTP('login')">כניסה</button>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" id="registerModal" onclick="closeModalOutside(event,'registerModal')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
+    <h2 class="modal-title">הרשמה חינם</h2>
+    <div class="form-row">
+      <div class="form-group"><label>שם פרטי</label><input type="text" id="regFirst" class="input-field"></div>
+      <div class="form-group"><label>שם משפחה</label><input type="text" id="regLast" class="input-field"></div>
+    </div>
+    <div class="form-group"><label>מספר טלפון</label><input type="tel" id="regPhone" class="input-field" placeholder="05X-XXXXXXX"></div>
+    <button class="btn-primary btn-full" onclick="sendOTP('register')">שלח קוד אימות</button>
+    <div id="otpSection_register" class="otp-section" style="display:none">
+      <div class="form-group" style="margin-top:16px"><label>קוד אימות</label><input type="text" id="registerOTP" maxlength="4" class="input-field input-otp" placeholder="XXXX"></div>
+      <button class="btn-primary btn-full" onclick="verifyOTP('register')">צור חשבון</button>
+    </div>
+  </div>
+</div>
+
+<footer class="footer" style="margin-top:20px">
+  <div class="container footer-inner">
+    <div class="footer-logo">🏗️ הנדסאי בניין IL</div>
+    <div class="footer-copy">© 2025</div>
+  </div>
+</footer>
+
+<script src="js/subjects.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script>
+const grid = document.getElementById('subjectsGrid');
+renderSubjectsGrid(grid);
+
+function filterSubjects(q) {
+  q = q.toLowerCase();
+  const filtered = q ? SUBJECTS.filter(s => s.name.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q)) : SUBJECTS;
+  grid.innerHTML = filtered.map(s => `
+    <a href="subject.html?id=${s.id}" class="subject-card">
+      <div class="subject-card-icon">${s.icon}</div>
+      <div class="subject-card-name">${s.name}</div>
+      <div class="subject-card-count">${s.files} קבצים</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:4px">${s.desc}</div>
+      <div class="subject-card-bar" style="margin-top:10px"></div>
+    </a>
+  `).join('') || `<div class="empty-state"><div class="empty-state-icon">🔍</div><h3>לא נמצאו תוצאות</h3></div>`;
+}
+</script>
+</body>
+</html>

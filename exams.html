@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מבחנים — הנדסאי בניין IL</title>
+<link rel="stylesheet" href="css/main.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏗️</text></svg>">
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><span class="logo-icon">🏗️</span><span><span class="logo-text">הנדסאי בניין IL</span><span class="logo-sub">מרכז הלימוד הלאומי</span></span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html" class="nav-link">ראשי</a>
+      <a href="subjects.html" class="nav-link">מקצועות</a>
+      <a href="formulas.html" class="nav-link">נוסחאות</a>
+      <a href="exams.html" class="nav-link active">מבחנים</a>
+    </div>
+    <div class="nav-actions" id="navActions">
+      <button class="btn-ghost" onclick="openModal('loginModal')">התחברות</button>
+      <button class="btn-primary" onclick="openModal('registerModal')">הרשמה חינם</button>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()" id="hamburger">☰</button>
+  </div>
+</nav>
+
+<div style="background:linear-gradient(135deg,#0d3355,#1a4f7a);padding:30px 20px;color:white">
+  <div class="container">
+    <h1 style="font-size:28px;font-weight:800;margin-bottom:8px">🎓 מבחנים משנים קודמות</h1>
+    <p style="opacity:0.8">מבחני אמצע, גמר ופתרונות לכל המקצועות</p>
+  </div>
+</div>
+
+<div class="container" style="padding-top:28px;padding-bottom:60px">
+  <!-- FILTERS -->
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;align-items:center">
+    <select class="filter-select" id="examSubject" onchange="renderExams()">
+      <option value="all">כל המקצועות</option>
+    </select>
+    <select class="filter-select" id="examType" onchange="renderExams()">
+      <option value="all">כל הסוגים</option>
+      <option value="midterm">מבחן אמצע</option>
+      <option value="final">מבחן גמר</option>
+    </select>
+    <select class="filter-select" id="examYear" onchange="renderExams()">
+      <option value="all">כל השנים</option>
+      <option value="2025">תשפ״ה 2025</option>
+      <option value="2024">תשפ״ד 2024</option>
+      <option value="2023">תשפ״ג 2023</option>
+      <option value="2022">תשפ״ב 2022</option>
+      <option value="2021">תשפ״א 2021</option>
+      <option value="2020">תש״פ 2020</option>
+    </select>
+    <select class="filter-select" id="examSol" onchange="renderExams()">
+      <option value="all">עם ובלי פתרון</option>
+      <option value="yes">עם פתרון בלבד</option>
+      <option value="no">ללא פתרון</option>
+    </select>
+    <button class="btn-primary btn-sm" onclick="openModal('uploadModal')">⬆️ העלה מבחן</button>
+  </div>
+
+  <div id="examsList"></div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="loginModal" onclick="closeModalOutside(event,'loginModal')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('loginModal')">✕</button>
+    <h2 class="modal-title">התחברות</h2>
+    <p class="modal-sub">הזן את מספר הטלפון שלך</p>
+    <div class="form-group"><label>מספר טלפון</label><input type="tel" id="loginPhone" class="input-field" placeholder="05X-XXXXXXX"></div>
+    <button class="btn-primary btn-full" onclick="sendOTP('login')">שלח קוד אימות</button>
+    <div id="otpSection_login" class="otp-section" style="display:none">
+      <div class="form-group" style="margin-top:16px"><label>קוד אימות</label><input type="text" id="loginOTP" maxlength="4" class="input-field input-otp" placeholder="XXXX"></div>
+      <button class="btn-primary btn-full" onclick="verifyOTP('login')">כניסה</button>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" id="registerModal" onclick="closeModalOutside(event,'registerModal')">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('registerModal')">✕</button>
+    <h2 class="modal-title">הרשמה חינם</h2>
+    <div class="form-row">
+      <div class="form-group"><label>שם פרטי</label><input type="text" id="regFirst" class="input-field"></div>
+      <div class="form-group"><label>שם משפחה</label><input type="text" id="regLast" class="input-field"></div>
+    </div>
+    <div class="form-group"><label>מספר טלפון</label><input type="tel" id="regPhone" class="input-field" placeholder="05X-XXXXXXX"></div>
+    <button class="btn-primary btn-full" onclick="sendOTP('register')">שלח קוד אימות</button>
+    <div id="otpSection_register" class="otp-section" style="display:none">
+      <div class="form-group" style="margin-top:16px"><label>קוד אימות</label><input type="text" id="registerOTP" maxlength="4" class="input-field input-otp" placeholder="XXXX"></div>
+      <button class="btn-primary btn-full" onclick="verifyOTP('register')">צור חשבון</button>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-logo">🏗️ הנדסאי בניין IL</div>
+    <div class="footer-links"><a href="#">אודות</a></div>
+    <div class="footer-copy">© 2025</div>
+  </div>
+</footer>
+
+<script src="js/subjects.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script>
+const EXAMS = [
+  {id:1, subject:'statics', subjectName:'חישוב סטטי וחוזק חומרים', type:'final',   year:2020, name:'מבחן גמר תש״פ',             hasSolution:true,  downloads:521, rating:4.9},
+  {id:2, subject:'statics', subjectName:'חישוב סטטי וחוזק חומרים', type:'midterm', year:2022, name:'מבחן אמצע תשפ״ב',           hasSolution:true,  downloads:334, rating:4.8},
+  {id:3, subject:'statics', subjectName:'חישוב סטטי וחוזק חומרים', type:'final',   year:2023, name:'מבחן גמר תשפ״ג',            hasSolution:false, downloads:289, rating:4.6},
+  {id:4, subject:'statics', subjectName:'חישוב סטטי וחוזק חומרים', type:'final',   year:2024, name:'מבחן גמר תשפ״ד',            hasSolution:true,  downloads:445, rating:4.7},
+  {id:5, subject:'soil',    subjectName:'קרקע וביסוס',              type:'final',   year:2022, name:'מבחן גמר תשפ״ב — קרקע',    hasSolution:false, downloads:178, rating:4.5},
+  {id:6, subject:'soil',    subjectName:'קרקע וביסוס',              type:'midterm', year:2023, name:'מבחן אמצע תשפ״ג — קרקע',   hasSolution:true,  downloads:234, rating:4.7},
+  {id:7, subject:'math',    subjectName:'מתמטיקה',                  type:'final',   year:2024, name:'מבחן גמר מתמטיקה תשפ״ד',   hasSolution:true,  downloads:389, rating:4.9},
+  {id:8, subject:'math',    subjectName:'מתמטיקה',                  type:'midterm', year:2023, name:'מבחן אמצע מתמטיקה תשפ״ג',  hasSolution:true,  downloads:278, rating:4.8},
+  {id:9, subject:'geodesy', subjectName:'גיאודזיה',                 type:'final',   year:2022, name:'מבחן גמר גיאודזיה תשפ״ב',  hasSolution:false, downloads:156, rating:4.4},
+  {id:10,subject:'roads',   subjectName:'כבישים ותשתיות',           type:'final',   year:2023, name:'מבחן גמר כבישים תשפ״ג',    hasSolution:true,  downloads:167, rating:4.6},
+  {id:11,subject:'materials',subjectName:'חומרי בניין',             type:'midterm', year:2024, name:'מבחן אמצע חומרי בניין תשפ״ד', hasSolution:true, downloads:198, rating:4.7},
+  {id:12,subject:'construction',subjectName:'תורת הבנייה',          type:'final',   year:2021, name:'מבחן גמר תורת הבנייה תשפ״א', hasSolution:false, downloads:143, rating:4.3},
+];
+
+// Populate subject filter
+const subSel = document.getElementById('examSubject');
+[...new Set(EXAMS.map(e => e.subject))].forEach(sid => {
+  const s = SUBJECTS.find(x => x.id === sid);
+  if (s) subSel.add(new Option(s.icon + ' ' + s.name, sid));
+});
+
+function renderExams() {
+  const sub  = document.getElementById('examSubject').value;
+  const type = document.getElementById('examType').value;
+  const year = document.getElementById('examYear').value;
+  const sol  = document.getElementById('examSol').value;
+  let list = EXAMS.filter(e =>
+    (sub  === 'all' || e.subject === sub) &&
+    (type === 'all' || e.type === type) &&
+    (year === 'all' || e.year === parseInt(year)) &&
+    (sol  === 'all' || (sol === 'yes' ? e.hasSolution : !e.hasSolution))
+  );
+  const el = document.getElementById('examsList');
+  if (!list.length) {
+    el.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🎓</div><h3>אין מבחנים לפי הסינון</h3><p><button class="btn-primary btn-sm" onclick="openModal('uploadModal')">⬆️ העלה מבחן</button></p></div>`;
+    return;
+  }
+  el.innerHTML = list.map(e => `
+    <div class="exam-card">
+      <div style="font-size:28px">📄</div>
+      <div class="exam-info">
+        <div class="exam-name">${e.name}</div>
+        <div class="exam-meta">
+          <span class="exam-tag exam-tag-year">${e.year}</span>
+          <span class="exam-tag ${e.type==='final'?'exam-tag-type':'exam-tag-type'}">${e.type==='final'?'מבחן גמר':'מבחן אמצע'}</span>
+          <span class="exam-tag ${e.hasSolution?'exam-tag-sol':'exam-tag-nosol'}">${e.hasSolution?'✅ עם פתרון':'❌ ללא פתרון'}</span>
+          <span style="font-size:12px;color:var(--text-muted)">📥 ${e.downloads}</span>
+          <span style="font-size:12px;color:var(--text-muted)">⭐ ${e.rating}</span>
+          <span style="font-size:12px;color:var(--text-muted)">${e.subjectName}</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="icon-btn" onclick="downloadFile(${e.id})" title="הורד">⬇️</button>
+        <button class="icon-btn" title="מועדפים" onclick="toggleFav(${e.id},this)">🤍</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+renderExams();
+</script>
+</body>
+</html>
